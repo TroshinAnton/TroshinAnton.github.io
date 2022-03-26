@@ -1,11 +1,15 @@
 body {
     text-align: center;
 }
+@font-face {
+    font-family: RedOctober;
+    src: url(fonts/RedOctober.ttf);
+}
 p {
     font-family: Arial, sans-serif;
     color: black;
 }
 h1 {
-    font-family: Arial, sans-serif;
+    font-family: RedOctober;
     color: black;
 }

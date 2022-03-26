@@ -1,9 +1,9 @@
-body {
-    text-align: center;
-}
 @font-face {
     font-family: RedOctober;
     src: url(RedOctober.ttf);
+}
+body {
+    text-align: center;
 }
 p {
     font-family: Arial, sans-serif;

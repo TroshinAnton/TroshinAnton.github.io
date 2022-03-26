@@ -3,7 +3,7 @@ body {
 }
 @font-face {
     font-family: RedOctober;
-    src: url(fonts/RedOctober.ttf);
+    src: url(RedOctober.ttf);
 }
 p {
     font-family: Arial, sans-serif;

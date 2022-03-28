@@ -18,3 +18,15 @@ h1 {
 hr {
     color: #FFFFFF;
 }
+a {
+    color: white;
+}
+a:hover {
+    color: white;
+}
+a:active {
+    color: white;
+}
+a.visited {
+    color: white;
+}

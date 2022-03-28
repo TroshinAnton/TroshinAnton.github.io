@@ -3,7 +3,7 @@
     src: url(RedOctober.ttf);
 }
 body {
-    
+    margin-left: 20px;
 }
 p {
     font-family: Arial, sans-serif;

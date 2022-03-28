@@ -8,25 +8,23 @@ body {
     text-align: left;
 }
 p {
-    font-family: Arial, sans-serif;
-    color: #FFFFFF;
+    font-family: Arial, sans-serif; color: #FFFFFF;
 }
 h1 {
-    font-family: RedOctober;
-    color: #FFFFFF;
+    font-family: RedOctober; color: #FFFFFF;
 }
 hr {
     color: #FFFFFF;
 }
 a {
-    color: white;
+    color: white; font-family: Arial;
 }
 a:hover {
-    color: white;
+    color: white; font-family: Arial;
 }
 a:active {
-    color: white;
+    color: white; font-family: Arial;
 }
 a.visited {
-    color: white;
+    color: white; font-family: Arial;
 }

@@ -19,14 +19,29 @@ hr {
     color: #FFFFFF;
 }
 a {
-    color: white;
+    text-decoration: none;
+    padding: 1em;
+    background: linear-gradient(45deg, #696eff, #f8acff);
+    display: block;
+    width: fit-content;
+    border-radius: 10px;
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.25rem;
+    box-shadow: 0 9px #444;
 }
+
 a:hover {
-    color: white;
+    background: linear-gradient(45deg, #494edf, #d6acdf);
+    color: #fff;
 }
+
+a:visited {
+    color: #fff;
+}
+
 a:active {
-    color: white;
-}
-a.visited {
-    color: white;
+    transform: translateY(4px);
+    box-shadow: 0 5px #444;
+    color: #fff;
 }

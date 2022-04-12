@@ -9,7 +9,7 @@ ll M = 1e9 + 7;
 void kupaga()
 {
  
-    
+     
 }
 /*
 g++ ilyalox.cpp -o a

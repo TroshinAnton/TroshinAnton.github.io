@@ -12,5 +12,5 @@ signed main() {
     freopen("i.log", "r", stdin);
     freopen("o.log", "w", stdout);
 #endif
-    cout << "Hello";
+    cout << "Hello"; 
 }

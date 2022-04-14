@@ -66,6 +66,7 @@ namespace TeslaX {
         std::fflush(stdin); std::cout << "Press button to continue..."; _getch();
     }
     void start(void) {
+    
         return;
     }
 }

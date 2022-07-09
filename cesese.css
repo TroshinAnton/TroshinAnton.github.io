@@ -45,3 +45,19 @@ a:active {
     box-shadow: 0 5px #444;
     color: #fff;
 }
+
+.hub {
+  display: block;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: white;
+  font-size: 3vw;
+}
+
+.hub span:nth-child(2) {
+  background: #FF9900;
+  color: #000000;
+  border-radius: 1vw;
+  padding: 0 1vw 1vw 1vw;
+  display: inline-block;
+}

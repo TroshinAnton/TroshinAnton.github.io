@@ -22,7 +22,7 @@ hr {
 a {
     text-decoration: none;
     padding: 1em;
-    background: linear-gradient(45deg, orange, orangered);
+    background: linear-gradient(45deg, orangered, #ffba00);
     display: block;
     width: fit-content;
     border-radius: 10px;
@@ -33,7 +33,7 @@ a {
 }
 
 a:hover {
-    background: linear-gradient(45deg, orangered, orange);
+    background: linear-gradient(45deg, #ffba00, orangered);
     color: #fff;
 }
 

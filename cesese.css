@@ -58,6 +58,6 @@ a:active {
   background: #FF9900;
   color: #000000;
   border-radius: 1vw;
-  padding: 0 1vw 1vw 1vw;
+  padding: 0 1vw 0 1vw;
   display: inline-block;
 }

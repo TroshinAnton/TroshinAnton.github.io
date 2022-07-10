@@ -5,6 +5,7 @@
 body {
     margin-left: 220px;
     margin-right: 220px;
+    margin-top: 30px;
     text-align: left;
 }
 p {
@@ -66,7 +67,7 @@ a:active {
 img.rot {
   animation: 1s linear 0s normal none infinite running rot;
   -webkit-animation: 1s linear 0s normal none infinite running rot;
-  width: 100px;
+  width: 200px;
 }
 @keyframes rot {
   0% {

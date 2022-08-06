@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define hotel trivago
-#define vi vector<int>
 #define pii pair<int, int>
 #define fi first
 #define se second
@@ -27,7 +26,7 @@ signed main(void) {
     freopen(".in", "r", stdin);
     freopen(".out", "w", stdout);
 #endif
-    int t; cin >> t;
-    while(t--)solve();
+    int t; cin >> t; while(t--)
+    solve();
     return -0;
 }

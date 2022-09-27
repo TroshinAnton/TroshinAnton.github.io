@@ -1,31 +1,18 @@
-#include			<bits/stdc++.h>
-#define ll			long long
+#include <bits/stdc++.h>
+#define ll long long
 #define fi first
 #define se second
-#define endl        '\n'
-using namespace		std;
-// ПРОДАЛ ИЛЮЬ ЗА 15 КОПЕЕК!!!1!
+#define endl '\n'
+using namespace std;
 ll M = 1e9 + 7;
-void kupaga()
-{
- 
-     
+void kupaga() {
+
 }
-/*
-g++ ilyalox.cpp -o a
-./a
- 
-*/
-int main()
-{
-    cin.tie(0)->sync_with_stdio(0);
+int main() {
+    cin.tie(0); ios_base::sync_with_stdio(0); cout.tie(0);
     //freopen("bacon.in", "r", stdin); freopen("bacon.out", "w", stdout);
-    //cout<<fixed<<setprecision(6);
-    ll zxc;  cin >> zxc;  while (zxc--)
-        kupaga();
- 
-#ifdef _DEBUG 
-    system("pause");
-#endif
+    //cout << fixed << setprecision(10);
+    //ll zxc;  cin >> zxc; while (zxc--)
+    kupaga();
     return 0;
 }

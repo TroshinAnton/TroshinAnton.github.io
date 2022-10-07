@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <math.h>
+#include <random>
+#include <queue>
+#include <iomanip>
+#include <bitset>
+#include <numeric>
+#include <stack>
+#include <deque>
+#include <memory.h>
+#include <string>
+#include <unordered_map>
+ 
+using namespace std;
+ 
+#define ll long long
+#define ull unsigned long long
+#define fi first
+#define se second
+ 
+const ll inf = 1e9 + 7;
+const ll mod = 998244353;
+ 
+void solve() {
+ 
+    return;
+}
+ 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    int t = 1;
+    //cin >> t;
+    while (t--) {
+        solve();
+        cout << endl;
+    }
+}

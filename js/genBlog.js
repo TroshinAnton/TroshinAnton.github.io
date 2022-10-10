@@ -93,3 +93,4 @@ for(let i = a.length-1; i >= 0; --i) {
 `
   let content = document.querySelector('#contentCenter')
   content.insertAdjacentHTML("beforeend", blogHTML)
+}

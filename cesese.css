@@ -13,14 +13,20 @@ p {
     color: #FFFFFF;
 }
 h2 {
+    margin-left: 30px;
     font-family: Arial, sans-serif;
     color: #FFFFFF;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 hr {
     color: #FFFFFF;
 }
 
-a {
+.button {
     text-decoration: none;
     padding: 0.8em;
     background: linear-gradient(45deg, orange, magenta);
@@ -33,16 +39,16 @@ a {
     box-shadow: 0 9px #444;
 }
 
-a:hover {
+.button:hover {
     background: linear-gradient(45deg, magenta, orange);
     color: #fff;
 }
 
-a:visited {
+.button:visited {
     color: #fff;
 }
 
-a:active {
+.button:active {
     transform: translateY(4px);
     box-shadow: 0 5px #444;
     color: #fff;

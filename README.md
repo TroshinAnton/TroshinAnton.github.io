@@ -4,3 +4,4 @@ A repository with a site where I publish templates for sports programming from f
 
 Let's say I decided to solve a couple of problems from a friend's computer in Omsk. My template is not there and I solve not on Codeforces. In this case, I will open this site and take my template.
 
+рот ту же дрим

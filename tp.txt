@@ -1,7 +1,103 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-int main() {
-  int64_t n, m, a;
-  cin >> n >> m >> a;
-  cout << ((m+a-1)/a)*((n+a-1)/a);
+#define hotel trivago
+#define vi vector<int>
+#define pii pair<int, int>
+#define fi first
+#define se second
+#define int long long
+#define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define double long double
+
+struct Node {
+    int value;
+    int add;
+};
+int n;
+vector<Node> tree;
+int f(int a, int b) {
+    return a+b;
+}
+
+void push(int num, int vl, int vr) {
+    if (tree[num].add == 0) {
+        return;
+    }
+    tree[num].value += tree[num].add * (vr - vl);
+    if (vl + 1 != vr) {
+        tree[2*num+1].add += tree[num].add;
+        tree[2*num+2].add += tree[num].add;
+    }
+    tree[num].add = 0;
+}
+void build(vector<int> &a, int num, int vl, int vr) {
+    if (vl + 1 == vr) {
+        tree[num].value = a[vl];
+        tree[num].add = 0;
+    }
+    else {
+        int vm = (vl + vr) / 2;
+        build(a, 2*num+1, vl, vm);
+        build(a, 2*num+2, vm, vr);
+        tree[num].value = f(tree[2*num+1].value, tree[2*num+2].value);
+    }
+}
+
+int get_sum(int num, int vl, int vr, int l, int r) {
+    //push(num, vl, vr);
+    if (vr <= l || r <= vl) {
+        return 0;
+    }
+    if (l <= vl && vr <= r) {
+        return tree[num].value;
+    }
+    int vm = (vl + vr) / 2;
+    return f(get_sum(2*num+1, vl, vm, l, r),
+            get_sum(2*num+2, vm, vr, l, r));
+}
+void upd(int x, int vl, int vr, int i, int v) {
+    if (i < vl || vr <= i) {
+        return;
+    }
+    if (vl + 1 == vr) {
+        tree[x].value = v;
+        return;
+    }
+    int m = (vl + vr) / 2;
+    upd(2*x+1, vl, m, i, v);
+    upd(2*x+2, m, vr, i, v);
+    tree[x].value = f(tree[2*x+1].value, tree[2*x+2].value);
+}
+ 
+void upd(int i, int v) {
+    upd(0, 0, n, i, v);
+}
+
+void solve() {
+    cin >> n;
+    tree.resize(4*n);
+    vector<int> a(n);
+    for (auto &i:a) cin >> i;
+    build(a, 0, 0, n);
+
+    string req;
+    while (cin >> req) {
+        if (req == "sum") {
+            int l, r;
+            cin >> l >> r;
+            cout << get_sum(0, 0, n, l-1, r) << '\n';
+        }
+        else {
+            int l, value;
+            cin >> l >> value;
+            upd(l-1, value);
+        }
+    }
+}
+signed main(void) {
+    ios_base::sync_with_stdio(0);
+    cout.tie(nullptr); cin.tie(nullptr);
+    solve();
+    return -0;
 }

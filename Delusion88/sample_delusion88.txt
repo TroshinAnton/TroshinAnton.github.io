@@ -1,0 +1,451 @@
+namespace fgeom {
+    using fgeom_t = long double;
+    const fgeom_t fgeom_eps = 1e-11, fgeom_pi = acosl(-1);
+ 
+    int fgeom_sign(fgeom_t v) {
+        if (abs(v) < fgeom_eps)
+            return 0;
+        return v > 0 ? 1 : -1;
+    }
+ 
+    struct Vector {
+        fgeom_t x, y;
+ 
+        Vector() = default;
+        Vector(const Vector&) = default;
+ 
+        template<typename Tp_>
+        Vector(Tp_ x_, Tp_ y_) : x(x_), y(y_) { }
+        template<typename Tp_>
+        Vector(Tp_ x1_, Tp_ y1_, Tp_ x2_, Tp_ y2_) : x(x2_ - x1_), y(y2_ - y1_) { }
+ 
+        Vector(Vector a_, Vector b_) {
+            *this = b_ - a_;
+        }
+ 
+        Vector operator-() {
+            return Vector(-x, -y);
+        }
+ 
+        Vector& operator+=(Vector other_) {
+            x += other_.x;
+            y += other_.y;
+            return *this;
+        }
+ 
+        friend Vector operator+(Vector lhs_, Vector rhs_) {
+            return lhs_ += rhs_;
+        }
+ 
+        Vector& operator-=(Vector other_) {
+            return *this += -other_;
+        }
+ 
+        friend Vector operator-(Vector lhs_, Vector rhs_) {
+            return lhs_ -= rhs_;
+        }
+ 
+        template<typename Tp_>
+        Vector& operator*=(Tp_ other_) {
+            x *= other_, y *= other_;
+            return *this;
+        }
+ 
+        template<typename Tp_>
+        friend Vector operator*(Vector lhs_, Tp_ rhs_) {
+            return lhs_ *= rhs_;
+        }
+ 
+        template<typename Tp_>
+        friend Vector operator*(Tp_ lhs_, Vector rhs_) {
+            return rhs_ *= lhs_;
+        }
+ 
+        template<typename Tp_>
+        Vector& operator/=(Tp_ other_) {
+            x /= other_, y /= other_;
+            return *this;
+        }
+ 
+        template<typename Tp_>
+        friend Vector operator/(Vector lhs_, Tp_ rhs_) {
+            return lhs_ /= rhs_;
+        }
+ 
+        template<typename Tp_>
+        friend Vector operator/(Tp_ lhs_, Vector rhs_) {
+            return rhs_ /= lhs_;
+        }
+ 
+        friend fgeom_t operator*(Vector lhs_, Vector rhs_) {
+            return lhs_.x * rhs_.x + lhs_.y * rhs_.y;
+        }
+ 
+        friend fgeom_t operator%(Vector lhs_, Vector rhs_) {
+            return lhs_.x * rhs_.y - lhs_.y * rhs_.x;
+        }
+ 
+        fgeom_t proj(Vector other_) const {
+            return ((*this) * other_) / other_.len();
+        }
+ 
+        Vector norm() const {
+            if (len() < fgeom_eps)
+                return Vector(0, 0);
+            return Vector(x / len(), y / len());
+        }
+ 
+        fgeom_t len() const {
+            return hypotl(x, y);
+        }
+ 
+        fgeom_t angle() const {
+            return atan2l(y, x);
+        }
+ 
+        fgeom_t angle(Vector other_) const {
+            return atan2l(*this % other_, *this * other_);
+        }
+ 
+        friend bool operator==(Vector lhs_, Vector rhs_) {
+            return abs(rhs_.x - lhs_.x) < fgeom_eps && abs(rhs_.y - lhs_.y) < fgeom_eps;
+        }
+ 
+        friend bool operator!=(Vector lhs_, Vector rhs_) {
+            return !(lhs_ == rhs_);
+        }
+ 
+        Vector cc() const {
+            return Vector(-y, x);
+        }
+ 
+        Vector cl() const {
+            return Vector(y, -x);
+        }
+ 
+        friend ostream& operator<< (ostream& out, const Vector v) {
+            out << v.x << ' ' << v.y;
+            return out;
+        }
+        friend istream& operator>> (istream& in, Vector &v) {
+            in >> v.x >> v.y;
+            return in;
+        }
+    };
+ 
+    struct Line {
+        fgeom_t a, b, c;
+ 
+        Line() = default;
+        Line(const Line&) = default;
+ 
+        Line(fgeom_t a_, fgeom_t b_, fgeom_t c_) : a(a_), b(b_), c(c_) { }
+ 
+        Line(Vector a_, Vector b_) {
+            a = a_.y - b_.y;
+            b = b_.x - a_.x;
+            c = - a * a_.x - b * a_.y;
+        }
+ 
+        Line(fgeom_t k_, fgeom_t b_) {
+            a = k_;
+            b = -1;
+            c = b_;
+        }
+ 
+        bool onLine(Vector v_) const {
+            return abs((a * v_.x + b * v_.y + c)) < fgeom_eps;
+        }
+ 
+        friend bool operator==(Line a_, Line b_) {
+            return abs(a_.a * b_.b - b_.a * a_.b) <= fgeom_eps &&
+                   abs(a_.a * b_.c - b_.a * a_.c) <= fgeom_eps &&
+                   abs(a_.b * b_.c - b_.b * a_.c) <= fgeom_eps;
+        }
+ 
+        friend bool operator!=(Line a_, Line b_) {
+            return !(a_ == b_);
+        }
+ 
+        pair<fgeom_t, fgeom_t> getEquation() const {
+            return make_pair(a / (b / -1), c / (b / - 1));
+        }
+ 
+        pair<Vector, Vector> findPoints() const {
+            if (abs(b) < fgeom_eps) {
+                return make_pair(Vector(-c / a, (fgeom_t)0), Vector(-c / a, (fgeom_t)1));
+            }
+            fgeom_t k_, b_;
+            tie(k_, b_) = getEquation();
+            return make_pair(Vector((fgeom_t)0, b_), Vector((fgeom_t)1, k_ + b_));
+        }
+    };
+ 
+    struct Ray {
+        Vector start, direction;
+ 
+        Ray() = default;
+        Ray(const Ray&) = default;
+ 
+        Ray(Vector start_, Vector end_) : start(start_), direction(end_ - start_) { }
+ 
+        bool onRay(Vector v_) {
+            return (v_ == start) || (v_ - start).norm() == direction.norm();
+        }
+ 
+        friend bool operator==(Ray a_, Ray b_) {
+            return a_.start == b_.start && a_.direction.norm() == b_.direction.norm();
+        }
+ 
+        friend bool operator!=(Ray a_, Ray b_) {
+            return !(a_ == b_);
+        }
+    };
+ 
+    struct Segment {
+        Vector a, b;
+ 
+        Segment() = default;
+        Segment(const Segment&) = default;
+ 
+        Segment(Vector a_, Vector b_) : a(a_), b(b_) { }
+        Segment(fgeom_t x1_, fgeom_t y1_, fgeom_t x2_, fgeom_t y2_) : a(x1_, y1_), b(x2_, y2_) { }
+ 
+        bool onSegment(Vector v_) {
+            return Ray(a, b).onRay(v_) && Ray(b, a).onRay(v_);
+        }
+ 
+        friend bool operator==(Segment a_, Segment b_) {
+            return (a_.a == b_.a && a_.b == b_.b) || (a_.a == b_.b && a_.b == b_.a);
+        }
+ 
+        friend bool operator!=(Segment a_, Segment b_) {
+            return !(a_ == b_);
+        }
+    };
+ 
+    pair<char, Vector> getIntersectionPoint(Line a_, Line b_) {
+        if (a_ == b_)
+            return make_pair(2, Vector(0, 0));
+        if (abs(a_.a * b_.b - a_.b * b_.a) < fgeom_eps)
+            return make_pair(0, Vector(0, 0));
+        return make_pair(1,
+                         Vector((a_.b * b_.c - b_.b * a_.c) / (a_.a * b_.b - a_.b * b_.a),
+                                (a_.c * b_.a - b_.c * a_.a) / (a_.a * b_.b - a_.b * b_.a)));
+    }
+    bool intersection(Line a_, Line b_) {
+        return getIntersectionPoint(a_, b_).first;
+    }
+ 
+    bool intersection(Ray a_, Ray b_) {
+        auto int_ = getIntersectionPoint(Line(a_.start, a_.start + a_.direction), Line(b_.start, b_.start + b_.direction));
+        if (int_.first == 0)
+            return 0;
+        if (int_.first == 2)
+            return a_.direction.norm() == b_.direction.norm() ||
+                   a_.start == b_.start ||
+                   a_.direction.norm() == Vector(a_.start, b_.start).norm() ||
+                   b_.direction.norm() == Vector(b_.start, a_.start).norm();
+        return a_.onRay(int_.second) && b_.onRay(int_.second);
+    }
+ 
+    bool intersection(Ray a_, Line b_) {
+        Vector p1, p2;
+        tie(p1, p2) = b_.findPoints();
+        return intersection(a_, Ray(p1, p2)) || intersection(a_, Ray(p2, p1));
+    }
+    bool intersection(Line a_, Ray b_) {
+        return intersection(b_, a_);
+    }
+ 
+    bool intersection(Segment a_, Line b_) {
+        return intersection(Ray(a_.b, a_.a), b_) && intersection(Ray(a_.a, a_.b), b_);
+    }
+    bool intersection(Line a_, Segment b_) {
+        return intersection(b_, a_);
+    }
+ 
+    bool intersection(Segment a_, Ray b_) {
+        return intersection(Ray(a_.b, a_.a), b_) && intersection(Ray(a_.a, a_.b), b_);
+    }
+    bool intersection(Ray a_, Segment b_) {
+        return intersection(b_, a_);
+    }
+ 
+    bool intersection(Segment a_, Segment b_) {
+        return intersection(a_, Ray(b_.a, b_.b)) && intersection(a_, Ray(b_.b, b_.a));
+    }
+ 
+    fgeom_t distance(Vector a_, Line b_) {
+        return abs(b_.a * a_.x + b_.b * a_.y + b_.c) / hypotl(b_.a, b_.b);
+    }
+    fgeom_t distance(Line a_, Vector b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Line a_, Line b_) {
+        if (intersection(a_, b_))
+            return 0;
+        return distance(b_.findPoints().first, a_);
+    }
+ 
+    fgeom_t distance(Ray a_, Line b_) {
+        if (intersection(a_, b_))
+            return 0;
+        return distance(a_.start, b_);
+    }
+    fgeom_t distance(Line a_, Ray b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Vector a_, Ray b_) {
+        if (abs(Vector(b_.start, a_).angle(Vector(b_.start, b_.start + b_.direction))) < fgeom_pi / 2 + fgeom_eps) {
+            return distance(a_, Line(b_.start, b_.start + b_.direction));
+        }
+        return Vector(b_.start, a_).len();
+    }
+    fgeom_t distance(Ray a_, Vector b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Vector a_, Segment b_) {
+        return max(distance(a_, Ray(b_.a, b_.b)), distance(a_, Ray(b_.b, b_.a)));
+    }
+    fgeom_t distance(Segment a_, Vector b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Segment a_, Ray b_) {
+        if (intersection(a_, b_)) {
+            return 0;
+        }
+        fgeom_t ans = distance(a_, b_.start);
+        if (abs(Vector(b_.start, a_.a).angle(Vector(b_.start, b_.start + b_.direction))) < fgeom_pi / 2 + fgeom_eps)
+            ans = min(ans, distance(b_, a_.a));
+        if (abs(Vector(b_.start, a_.b).angle(Vector(b_.start, b_.start + b_.direction))) < fgeom_pi / 2 + fgeom_eps)
+            ans = min(ans, distance(b_, a_.b));
+        return ans;
+    }
+    fgeom_t distance(Ray a_, Segment b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Segment a_, Line b_) {
+        if (intersection(a_, b_))
+            return 0;
+        return min(distance(a_.a, b_), distance(a_.b, b_));
+    }
+    fgeom_t distance(Line a_, Segment b_) {
+        return distance(b_, a_);
+    }
+ 
+    fgeom_t distance(Vector a_, Vector b_) {
+        return Vector(a_, b_).len();
+    }
+ 
+    fgeom_t distance(Segment a_, Segment b_) {
+        if (intersection(a_, b_))
+            return 0;
+        return min({distance(a_.a, b_), distance(a_.b, b_), distance(b_.a, a_), distance(b_.b, a_)});
+    }
+ 
+    fgeom_t distance(Ray a_, Ray b_) {
+        if (intersection(a_, b_))
+            return 0;
+        return min(distance(a_, b_.start), distance(a_.start, b_));
+    }
+ 
+    void rotatePolygon(vector<Vector>& p_) {
+        size_t idx = 0;
+        for (size_t i = 1; i < p_.size(); ++i) {
+            if (p_[i].y < p_[idx].y || (abs(p_[i].y - p_[idx].y) < fgeom_eps && p_[i].x < p_[idx].x))
+                idx = i;
+        }
+        rotate(p_.begin(), p_.begin() + idx, p_.end());
+    }
+ 
+    void mirrorPolygon(vector<Vector>& p_) {
+        for (auto& [x, y] : p_)
+            x = -x, y = -y;
+    }
+ 
+    vector<Vector> MinkowskiSum(vector<Vector> p_, vector<Vector> q_) {
+        rotatePolygon(p_);
+        rotatePolygon(q_);
+        p_.push_back(p_[0]);
+        q_.push_back(q_[0]);
+        p_.push_back(p_[1]);
+        q_.push_back(q_[1]);
+        vector<Vector> res_;
+        size_t i = 0, j = 0;
+        while (i < p_.size() - 2 || j < q_.size() - 2) {
+            if (i >= p_.size() || j >= q_.size()) assert(0);
+            res_.push_back(p_[i] + q_[j]);
+            fgeom_t crossProd = (p_[i + 1] - p_[i]) % (q_[j + 1] - q_[j]);
+            bool vx = 0;
+            if (crossProd > -fgeom_eps)
+                ++i, vx = 1;
+            if (crossProd < fgeom_eps)
+                ++j, vx = 1;
+            assert(vx);
+        }
+        return res_;
+    }
+ 
+    fgeom_t area(Vector a_, Vector b_, Vector c_) {
+        return .5 * abs(Vector(a_, b_) % Vector(a_, c_));
+    }
+ 
+    fgeom_t inTriangle(Vector a_, Vector b_, Vector c_, Vector p_) {
+        return abs((area(p_, a_, b_) + area(p_, b_, c_) + area(p_, c_, a_)) - area(a_, b_, c_)) < fgeom_eps;
+    }
+ 
+    bool contains(vector<Vector>& p_, Vector d_, bool strict_) {
+        int f = !strict_;
+        size_t l = 1, r = p_.size() - 1;
+        if (fgeom_sign(Vector(p_[0], p_[l]) % Vector(p_[0], p_[r])) > 0)
+            swap(l, r);
+        if (fgeom_sign(Vector(p_[0], p_[l]) % Vector(p_[0], d_)) >= f ||
+            fgeom_sign(Vector(p_[0], p_[r]) % Vector(p_[0], d_)) <= -f)
+            return 0;
+        while (abs((long long)r - (long long)l) > 1) {
+            size_t m = (l + r) / 2;
+            (fgeom_sign(Vector(p_[0], p_[m]) % Vector(p_[0], d_)) > 0 ? r : l) = m;
+        }
+        return (fgeom_sign(Vector(p_[l], p_[r]) % Vector(p_[l], d_)) < f);
+    }
+ 
+    fgeom_t intersection(vector<Vector> p_, vector<Vector> q_) {
+        mirrorPolygon(q_);
+        auto res_ = MinkowskiSum(p_, q_);
+        return contains(res_, Vector(0, 0), 0);
+    }
+ 
+    fgeom_t distance(vector<Vector> p_, vector<Vector> q_) {
+        mirrorPolygon(q_);
+        auto res_ = MinkowskiSum(p_, q_);
+        fgeom_t ans_ = inf;
+        if (contains(res_, Vector(0, 0), 0))
+            return 0;
+        res_.push_back(res_[0]);
+        for (size_t i = 0; i < res_.size() - 1; ++i)
+            ans_ = min(ans_, distance(Segment(res_[i], res_[i + 1]), Vector(0, 0)));
+        return ans_;
+    }
+ 
+    vector<Vector> convexHull(vector<Vector> p_) {
+        sort(p_.begin(), p_.end(), [](Vector x, Vector y) {
+            return tie(x.x, x.y) < tie(y.x, y.y);
+        });
+        p_.erase(unique(p_.begin(), p_.end()), p_.end());
+        vector<Vector> hull(p_.size() + 1);
+        int s = 0, t = 0;
+        for (int i = 2; i--; s = --t, reverse(p_.begin(), p_.end()))
+            for (auto e : p_) {
+                while (t >= s + 2 && Vector(hull[t - 2], hull[t - 1]) % Vector(hull[t - 2], e) <= fgeom_eps)
+                    t--;
+                hull[t++] = e;
+            }
+        return vector(hull.begin(), hull.begin() + t - (t == 2 && hull[0] == hull[1]));
+    }
+} // namespace fgeom
